@@ -1,5 +1,5 @@
 import argparse
-import gmpy
+import math
 import random
 import sys
 
@@ -28,6 +28,30 @@ def is_prime(i):
     return i in primes
 
 
+def lcm(a, b):
+    return a * b // math.gcd(a, b)
+
+
+def inverse_mod(e, x):
+    """
+    python for:
+    d * e mod x = 1
+    """
+    t = 0
+    newt = 1
+    r = x
+    newr = e
+    while newr != 0:
+        q = r // newr
+        t, newt = newt, t - q * newt
+        r, newr = newr, r - q * newr
+    if r > 1:
+        return None
+    if t < 0:
+        t += x
+    return t
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     'p', type=int, help="Prime number greater than 5 and less than 200. Try 53.")
@@ -49,7 +73,7 @@ if not (p > 5 and
 
 
 n = p*q
-x = gmpy.lcm(p - 1, q - 1)
+x = lcm(p - 1, q - 1)
 
 dontuse = [p, q]
 primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
@@ -58,15 +82,15 @@ primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
 e = random.choice([pr for pr in primes if pr < n and not pr in dontuse])
 
 # modular multiplicative inverse
-d = gmpy.invert(e, x)
-if d == 0:
+d = inverse_mod(e, x)
+if d is None:
     print("No modular multiplicative inverse found for exponent {}. That's randomly chosen so run the script again or choose different p & q.".format(e))
     sys.exit(1)
 
 message = 123
 
-encrypted = (message**e) % n
-decrypted = (encrypted**d) % n  # == message
+encrypted = pow(message, e, n)
+decrypted = pow(encrypted, d, n)  # == message
 
 print("Here's what's happening:\n")
 print("p = {}".format(p))
@@ -87,11 +111,11 @@ print("Now we use these for our keys:")
 print("Public Key  = (n, e) = ({}, {})".format(n, e))
 print("Private Key = (n, d) = ({}, {})\n".format(n, d))
 print("And we can encrypt and decrypt a simple message")
-print("message:   {}\n".format(message))
-print("encrypted = (message**e) % n")
-print("encrypted = ({}**{}) % {}".format(message, e, n))
+print("message = {}\n".format(message))
+print("encrypted = pow(message, e, n)")
+print("encrypted = pow({}, {}, {})".format(message, e, n))
 print("encrypted = {}\n".format(encrypted))
-print("decrypted = (encrypted**d) % n")
-print("decrypted = ({}**{}) % {}".format(encrypted, d, n))
+print("decrypted = pow(encrypted, d, n)")
+print("decrypted = pow({}, {}, {})".format(encrypted, d, n))
 print("decrypted = {}\n".format(decrypted))
 print("🤯")

@@ -2,14 +2,6 @@
 
 This is an example of how to calculate RSA key pairs. It's intended for educational purposes and is NOT for use in Real Code.
 
-## Dependencies
-
-[gmpy](https://pypi.org/project/gmpy/) - General MultiPrecision arithmetic for Python.
-
-```
-pip install gmpy
-```
-
 ## Running
 
 Choose two prime numbers for your 'p' & 'q':
