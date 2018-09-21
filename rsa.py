@@ -78,8 +78,8 @@ x = lcm(p - 1, q - 1)
 dontuse = [p, q]
 primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
 
-# e must be coprime to n and less than n
-e = random.choice([pr for pr in primes if pr < n and not pr in dontuse])
+# e must be coprime to x and less than x
+e = random.choice([pr for pr in primes if pr < x and not pr in dontuse])
 
 # modular multiplicative inverse
 d = inverse_mod(e, x)
